@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.mail.MessagingException;
 import model.models.MailFile;
+import model.services.DownloadAttachmentService;
 import model.services.MailService;
 import util.FileUtility;
 
@@ -29,15 +30,8 @@ public class Program {
 
         try {
             MailService mailService = new MailService(props, null);
-
-            List<File> myFiles = FileUtility.getFiles("C:\\temp\\folder1");
-            for (File file : myFiles) {
-                if (file.getName().endsWith(".eml")) {
-                    MailFile mailFile = mailService.openMessage(file);
-                    mailFile.saveAllAttachments(file.getParent());
-                }
-
-            }
+            DownloadAttachmentService downloadAttachService = new DownloadAttachmentService(mailService);
+            downloadAttachService.saveAllAttachments("C:\\temp\\folder1", f -> f.getName().endsWith(".eml"));
 
         } catch (FileNotFoundException ex) {
             System.out.println("Error: " + ex.getMessage());
