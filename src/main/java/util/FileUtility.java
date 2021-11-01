@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FileUtility {
     
-    private static List<File> getFilesRecursive(File directory, List<File> files){
+    private static void getFilesRecursive(File directory, List<File> files){
         File[] list = directory.listFiles();
         for(File item : list){
             if(item.isFile() == true){
@@ -23,12 +23,12 @@ public class FileUtility {
                 getFilesRecursive(item.getAbsoluteFile(), files);
             }
         }
-        return files;
     }
     
     public static List<File> getFiles(String folderPath){
         File directory = new File(folderPath);
         List<File> list = new ArrayList<>();
-        return getFilesRecursive(directory, list);
+        getFilesRecursive(directory, list);
+        return list;
     }
 }
