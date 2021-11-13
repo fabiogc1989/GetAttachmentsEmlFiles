@@ -32,7 +32,12 @@ public class DownloadAttachmentService {
             File item = parentFolder.listFiles()[i - 1];
             if (item.isFile() == true) {
                 String itemExtension = item.getName().substring(item.getName().lastIndexOf('.') + 1);
-                item.renameTo(new File(parentFolder.getAbsoluteFile() + "\\" + String.format("%s.%d.%s", filename, i, itemExtension)));
+                File futureFile = new File(parentFolder.getAbsoluteFile() + "\\" + String.format("%s.%d.%s", filename, i, itemExtension));
+                if (FileUtility.hasFile(futureFile)) {
+                	futureFile.delete();
+                }
+                
+                item.renameTo(futureFile);
             }
         }
     }
@@ -43,8 +48,9 @@ public class DownloadAttachmentService {
             if (criteria.test(file)) {
                 MailFile mailFile = mailSvc.openMessage(file);
                 mailFile.saveAllAttachments(file.getParent());
+                renameAttachments(file);
             }
-            renameAttachments(file);
+            
         }
     }
 

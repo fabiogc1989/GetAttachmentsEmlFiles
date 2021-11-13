@@ -4,24 +4,29 @@
  */
 package application;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
+
 import javax.mail.MessagingException;
-import model.models.MailFile;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.services.DownloadAttachmentService;
 import model.services.MailService;
-import util.FileUtility;
 
 /**
  *
  * @author Fabio Coimbra
  */
 public class Program {
+	
+	private static final Logger logger = LogManager.getLogger(Program.class);
 
     public static void main(String[] args) {
+    	
+    	logger.info("Test");
 
         Properties props = System.getProperties();
         props.put("mail.smtp.Host", "smtp-mail.Outlook.com");

@@ -31,4 +31,13 @@ public class FileUtility {
         getFilesRecursive(directory, list);
         return list;
     }
+    
+    public static boolean hasFile(String filePath) {
+    	File file = new File(filePath);
+    	return file.exists();
+    }
+    
+    public static boolean hasFile(File file) {
+    	return FileUtility.hasFile(file.getAbsolutePath());
+    }
 }
