@@ -19,6 +19,10 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.models.MailFile;
 
 /**
@@ -26,6 +30,8 @@ import model.models.MailFile;
  * @author Fabio Coimbra
  */
 public class MailService {
+	
+	private static Logger logger = LogManager.getLogger(MailService.class);
 
     private Session mailSession;
 
@@ -40,13 +46,18 @@ public class MailService {
         MailFile mailFile = new MailFile();
         mailFile.setContentType(message.getContentType());
         mailFile.setSubject(message.getSubject());
+        
+        logger.info("Content-Type: " + mailFile.getContentType());
+        logger.info("Subject: " + mailFile.getSubject());
 
         Address[] fromArray = message.getFrom();
         for (int i = 0; i < fromArray.length; i++) {
+        	logger.info("From: " + fromArray[i]);
             mailFile.addFrom(fromArray[i]);
         }
 
         Object content = message.getContent();
+        logger.info("Get mail content");
         if (content instanceof String) {
             mailFile.setBody((String) content);
         } else {
@@ -56,6 +67,7 @@ public class MailService {
                 MimeBodyPart part = (MimeBodyPart) multiPart.getBodyPart(i);
                 if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())) {
                     mailFile.addAttachment(part);
+                    logger.info("Attachment: " + part.getFileName());
                 } else {
                     mailFile.setBody((String)part.getContent());
                 }

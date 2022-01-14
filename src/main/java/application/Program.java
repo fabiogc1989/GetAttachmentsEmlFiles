@@ -7,9 +7,11 @@ import java.util.Properties;
 
 import javax.mail.MessagingException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.services.DownloadAttachmentService;
 import model.services.MailService;
-import util.LoggerPrinter;
 
 /**
  *
@@ -17,7 +19,7 @@ import util.LoggerPrinter;
  */
 public class Program {
 	
-	private static final LoggerPrinter<Program> logger = new LoggerPrinter<Program>(Program.class);
+	private static final Logger logger = LogManager.getLogger(Program.class);
 
     public static void main(String[] args) {
     	
@@ -36,8 +38,6 @@ public class Program {
         try {
             MailService mailService = new MailService(props, null);
             DownloadAttachmentService downloadAttachService = new DownloadAttachmentService(mailService);
-            
-            logger.info("Start saving attachments for each eml files");
             downloadAttachService.saveAllAttachments("C:\\temp\\folder1", f -> f.getName().endsWith(".eml"));
 
         } catch (FileNotFoundException ex) {

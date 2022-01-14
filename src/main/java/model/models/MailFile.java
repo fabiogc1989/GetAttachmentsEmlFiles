@@ -13,11 +13,18 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeUtility;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import model.services.DownloadAttachmentService;
+
 /**
  *
  * @author Fabio Coimbra
  */
 public class MailFile {
+	
+	private static Logger logger = LogManager.getLogger(MailFile.class);
 
     private String ContentType;
     private String subject;
@@ -79,6 +86,7 @@ public class MailFile {
     public void saveAttachment(int index, String outPath) throws IndexOutOfBoundsException, MessagingException, UnsupportedEncodingException, IOException {
         MimeBodyPart part = getAttachments().get(index);
         part.saveFile(outPath + "\\" + MimeUtility.decodeText(part.getFileName()));
+        logger.trace("Save the attachment '" + part.getFileName() + "' to " + outPath);
     }
     
     public void saveAllAttachments(String outPath) throws MessagingException, UnsupportedEncodingException, IOException{

@@ -6,10 +6,14 @@ package model.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
 import javax.mail.MessagingException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.models.MailFile;
 import util.FileUtility;
 
@@ -18,6 +22,8 @@ import util.FileUtility;
  * @author Fabio Coimbra
  */
 public class DownloadAttachmentService {
+	
+	private static Logger logger = LogManager.getLogger(DownloadAttachmentService.class);
 
     private MailService mailSvc;
 
@@ -38,15 +44,20 @@ public class DownloadAttachmentService {
                 }
                 
                 item.renameTo(futureFile);
+                
+                logger.trace("the file '" + item.getName() + "' was renamed to '" + futureFile.getName() + "'");
             }
         }
     }
 
     public void saveAllAttachments(String path, Predicate<File> criteria) throws MessagingException, IOException {
-        List<File> myFiles = FileUtility.getFiles(path);
+    	logger.info("Start saving attachments for each eml files");
+    	List<File> myFiles = FileUtility.getFiles(path);
         for (File file : myFiles) {
             if (criteria.test(file)) {
+            	logger.info("Open Message from " + file.getAbsoluteFile());
                 MailFile mailFile = mailSvc.openMessage(file);
+                logger.trace("Message read successfully");
                 mailFile.saveAllAttachments(file.getParent());
                 renameAttachments(file);
             }
